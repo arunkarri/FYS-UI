@@ -1,11 +1,11 @@
 import React from "react";
 import { Field, formInputData, formValidation } from 'reactjs-input-validator';
-import {Link,Route,Redirect,Switch} from 'react-router-dom';
+import { Link, Route, Redirect, Switch } from 'react-router-dom';
 import { API_ROOT } from '../variables/api';
 import {
   Button, Form, FormGroup, Label, Input,
   Col,
-  Card,CardBody,CardTitle,CardHeader,
+  Card, CardBody, CardTitle, CardHeader,
   Container
 } from "reactstrap";
 import routes from "routes.js";
@@ -18,11 +18,35 @@ class SignIn extends React.Component {
 
     this.state = {
       data: {},
-      jwtToken: ''
+      loginData: {},
+      apiPass: false
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
+
+  componentDidMount(){
+    fetch(`${API_ROOT}/token`, {
+      method: 'post',
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(this.defaultToken)
+    })
+      .then(function (resp) {
+        return resp.clone().json();
+      })
+      .then((res) => {
+        console.log(res);
+        localStorage.setItem('token', `Bearer ${res.token}`);
+      });
+  }
+
+  defaultToken = {
+    "userName": "browser",
+    "fullName": "fundyourschool",
+    "userType": "BROWSER"
+  };
 
   handleChange(event, inputValue, inputName, validationState, isRequired) {
     const value = (event && event.target.value) || inputValue;
@@ -39,92 +63,104 @@ class SignIn extends React.Component {
     const isFormValid = formValidation(this.state.data); // eslint-disable-line no-unused-vars
   }
 
-  tokenData={
-    "userName": "gvikas3",
-    "userType": "CUSTOMER",
-    "fullName": "gnanavikas"
-  
-}
 
-  data={
-      "userName": "gvikas3",
-      "userType": "CUSTOMER",
-      "password": "Test@123",
-      "fullName": "gnanavikas",
-      "phoneNumber": "9949699736",
-      "email": "gnanavikas93@gmail.com"
-    
-  }
 
-  
   isLoginValid() {
-    
-    fetch(`${API_ROOT}/token`,{
-      method: 'post',
-      headers: {
-        "Content-Type": "application/json",
-    },
-      body: JSON.stringify(this.tokenData)
-    })
-    .then(({ res }) => {
-      console.log(res);
-      session.setLocal('token', `Bearer ${res.token}`);
+    console.log(typeof JSON.stringify(localStorage.getItem('token')));
+    if (JSON.stringify(localStorage.getItem('token')) === 'null') {
 
-      fetch(`${API_ROOT}/rest/user/regiser`,{
+      fetch(`${API_ROOT}/token`, {
         method: 'post',
         headers: {
           "Content-Type": "application/json",
-          "Authorization": session.getLocal('token'),
-      },
-        body: this.data
+        },
+        body: JSON.stringify(this.defaultToken)
       })
-        .then(({ results }) => this.setState({ person: results }));
-    });
-    
-  }
- 
-  handleSubmit(event) {
-    event.preventDefault();
-    this.setState({isFormValid : formValidation(this.state.data)});
-    this.isLoginValid();
-    if (this.state.isFormValid) {
-      // do anything including ajax calls
-      this.setState({ callAPI: true });
-      console.log(this.props);
-    } else {
-      this.setState({ callAPI: true, shouldValidateInputs: !this.state.isFormValid });
+        .then(function (resp) {
+          return resp.clone().json();
+        })
+        .then((res) => {
+          console.log(res);
+          localStorage.setItem('token', `Bearer ${res.token}`);
+          this.login();
+        });
+    }
+    else {
+      this.login();
     }
   }
+  login() {
 
-  
+    fetch(`${API_ROOT}/rest/user/login`, {
+      method: 'post',
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": JSON.stringify(localStorage.getItem('token')),
+      },
+      body: JSON.stringify({
+        "userName": this.state.data.username.value,
+        "password": this.state.data.password.value
+      })
+    })
+      .then(function (resp) {
+        return resp.clone().json();
+      })
+      .then(({ results }) => {
+        this.setState({ apiPass: true })
+        if (this.state.isFormValid) {
+          // do anything including ajax calls
+          this.setState({ callAPI: true });
+        } else {
+          this.setState({ callAPI: true, shouldValidateInputs: !this.state.isFormValid });
+        }
+      });
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
+    localStorage.setItem('username',this.state.data.username.value);
+    localStorage.setItem('password',this.state.data.password.value);
+    this.loginData=  {
+      "userName": this.state.data.username.value,
+      "password": this.state.data.password.value
+    }
+    this.setState({
+      isFormValid: formValidation(this.state.data),
+      loginData: this.loginData
+    });
+    this.isLoginValid();
+
+  }
+
+
   render() {
     return (
       <div className="content">
         <Container className="login-form">
-              <Card>
-                <CardHeader >
-                  <CardTitle tag="h4">
-                  Please Sign In
+          <Card>
+            <CardHeader >
+              <CardTitle tag="h4">
+                Please Sign In
                   </CardTitle>
-                </CardHeader>
-                <CardBody>
+            </CardHeader>
+            <CardBody>
               <form className="form">
                 <Col>
                   <Field
-                    validator="isEmail" required
-                    label="Email" name="email" placeholder="Email"
+                    validator="isAlphanumeric" required
+                    label="User Name" name="username" placeholder="User Name"
                     onChange={this.handleChange}
-                    value={this.state.data.email}
+                    value={this.state.data.username}
                     shouldValidateInputs={this.state.shouldValidateInputs}
                   />
-                <Field
-              validator="isAlphanumeric" required minLength={8}
-              minLengthErrMsg="Short passwords are easy to guess. Try one with atleast 8 characters"
-              label="Password" name="password" type="password" placeholder="Password"
-              onChange={this.handleChange}
-              value={this.state.data.password}
-              shouldValidateInputs={this.state.shouldValidateInputs}
-            />
+                  <Field
+                    validator="isAlphanumeric" required minLength={8}
+                    minLengthErrMsg="Short passwords are easy to guess. Try one with atleast 8 characters"
+                    label="Password" name="password" type="password" placeholder="Password"
+                    onChange={this.handleChange}
+                    value={this.state.data.password}
+                    shouldValidateInputs={this.state.shouldValidateInputs}
+                  />
                 </Col>
                 <Button
                   block
@@ -134,15 +170,15 @@ class SignIn extends React.Component {
                 >
                   Login
           </Button>
-          {this.state.isFormValid && (
-            <Redirect from="/login "to="/main/schools" />
-          )}
+                {this.state.apiPass && (
+                  <Redirect from="/login " to="/main/schools" />
+                )}
               </form>
 
               <p>Not a registered user? <Link to={`signup`}>Sign up Here</Link></p>
-              </CardBody>
-              </Card>
-          </Container>
+            </CardBody>
+          </Card>
+        </Container>
       </div>
     );
   }

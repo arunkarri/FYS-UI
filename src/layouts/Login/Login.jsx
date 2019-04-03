@@ -1,4 +1,4 @@
-import React from "react";
+import React, {Component} from "react";
 import { Field, formInputData, formValidation } from 'reactjs-input-validator';
 import {Link,Route,Redirect,Switch} from 'react-router-dom';
 import { API_ROOT } from '../../variables/api';
@@ -15,6 +15,10 @@ import routes from "pvtRoutes.js";
 class Login extends React.Component {
   // constructor(props) {
   //   super(props);
+  // }
+
+  // componentWillUnmount(){
+  //   this.getRoutes= this.getRoutes.destroy();
   // }
 
   getRoutes = routes => {

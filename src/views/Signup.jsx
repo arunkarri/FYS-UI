@@ -19,7 +19,8 @@ class Signup extends React.Component {
       data: {},
       userData: {},
       tokenData: {},
-      selectedOption: 'volunteer'
+      selectedOption: 'volunteer',
+      apiPass:  false
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -53,11 +54,11 @@ class Signup extends React.Component {
   }
 
   tokenData = {
-    "userName": "gvikas3",
-    "userType": "CUSTOMER",
-    "fullName": "gnanavikas"
-
+    "userName": this.state.data.userName.value,
+    "userType": this.state.selectedOption,
+    "fullName": this.state.data.firstName.value + ' ' + this.state.data.lastName.value,
   };
+
   isLoginValid() {
 
     fetch(`${API_ROOT}/token`, {
@@ -71,46 +72,54 @@ class Signup extends React.Component {
         return resp.clone().json();
       })
       .then((res) => {
-        session.setLocal('token', `Bearer ${res.token}`);
+        localStorage.setItem('token', `Bearer ${res.token}`);
+        console.log(res.token, JSON.stringify(localStorage.getItem('token')));
+        this.registerUser();
 
-        return fetch(`${API_ROOT}/rest/user/regiser`, {
-          method: 'post',
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": session.getLocal('token'),
-          },
-          body: JSON.stringify(this.state.userData)
-        })
-        .then(function (resp) {
-          console.log(JSON.stringify(this.state.userData));
-          return resp.clone().json();
-        })
-          .then(({ results }) => this.setState({ person: results }));
       });
 
+  }
+  registerUser() {
+    fetch(`${API_ROOT}/rest/user/register`, {
+      method: 'post',
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": JSON.stringify(localStorage.getItem('token'))
+      },
+      body: JSON.stringify(this.state.userData)
+    })
+      .then(function (resp) {
+        return resp.clone().json();
+      })
+      .then(({ results }) => {
+        this.setState({ person: results,apiPass: true })
+        if (this.state.isFormValid) {
+          // do anything including ajax calls
+          this.setState({ callAPI: true });
+          console.log(this.props);
+        } else {
+          this.setState({ callAPI: true, shouldValidateInputs: !this.state.isFormValid });
+        }
+      });
   }
 
   handleSubmit(event) {
     event.preventDefault();
-    this.state.userData = {
-      "userName": this.state.data.userName,
+    this.userData = {
+      "userName": this.state.data.userName.value,
       "userType": this.state.selectedOption,
-      "password": this.state.data.password,
-      "fullName": this.state.data.firstName + ' ' + this.state.data.lastName,
-      "phoneNumber": this.state.data.phoneNumber,
-      "email": this.state.data.email
+      "password": this.state.data.password.value,
+      "fullName": this.state.data.firstName.value + ' ' + this.state.data.lastName.value,
+      "phoneNumber": this.state.data.phoneNumber.value,
+      "email": this.state.data.email.value
 
     };
-    this.setState({ isFormValid: formValidation(this.state.data), 
-      userData: this.userData });
+    this.setState({
+      isFormValid: formValidation(this.state.data),
+      userData: this.userData
+    });
     this.isLoginValid();
-    if (this.state.isFormValid) {
-      // do anything including ajax calls
-      this.setState({ callAPI: true });
-      console.log(this.props);
-    } else {
-      this.setState({ callAPI: true, shouldValidateInputs: !this.state.isFormValid });
-    }
+
   }
 
 
@@ -203,7 +212,7 @@ class Signup extends React.Component {
                 >
                   Signup
           </Button>
-                {this.state.isFormValid && (
+                {this.state.apiPass && (
                   <Redirect from="/login " to="/admin/dashboard" />
                 )}
               </form>

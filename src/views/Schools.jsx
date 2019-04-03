@@ -1,5 +1,5 @@
 import React from "react";
-
+import { API_ROOT } from '../variables/api';
 import {
   Alert,
   UncontrolledAlert,
@@ -12,8 +12,32 @@ import {
   Col,
   Progress
 } from "reactstrap";
-
+import axios from 'axios';
 class Schools extends React.Component {
+  constructor(props){
+    super(props);
+    this.state={
+      schools:[]
+    }
+  }
+  
+
+  componentDidMount(){
+    axios.get(`${API_ROOT}/rest/school/all`,{
+      // method: 'GET',
+       crossDomain: true ,
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": JSON.stringify(localStorage.getItem('token'))
+      }
+    })
+      .then((resp) => {
+        return resp.clone().json();
+      })
+      .then((res) => {
+        console.log(res);
+      });
+  }
 
 
 
