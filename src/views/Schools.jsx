@@ -12,7 +12,7 @@ import {
   Col,
   Progress
 } from "reactstrap";
-import axios from 'axios';
+
 class Schools extends React.Component {
   constructor(props){
     super(props);
