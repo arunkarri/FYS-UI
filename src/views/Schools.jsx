@@ -23,8 +23,8 @@ class Schools extends React.Component {
   
 
   componentDidMount(){
-    axios.get(`${API_ROOT}/rest/school/all`,{
-      // method: 'GET',
+    fetch(`${API_ROOT}/rest/school/GURU`,{
+       method: 'GET',
        crossDomain: true ,
       headers: {
         "Content-Type": "application/json",
