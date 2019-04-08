@@ -1,13 +1,12 @@
 import React from "react";
-
+import { API_ROOT } from '../variables/api';
+import { Field, formInputData, formValidation } from 'reactjs-input-validator';
 import {
-  Alert,UncontrolledAlert,Button,
+  Button,
   Card,CardHeader,CardBody,CardTitle,
-  Row,Col,Progress,Table,
-  Carousel,CarouselItem,CarouselControl,CarouselIndicators,CarouselCaption,
-  Popover, PopoverHeader, PopoverBody
+  Row,Col,Progress,Table, Modal, ModalHeader, ModalBody, ModalFooter
 } from "reactstrap";
-
+import { Redirect } from 'react-router-dom';
 const items = [
   {
     src: 'http://images6.fanpop.com/image/photos/36800000/School-image-school-36812016-500-434.jpg',
@@ -32,6 +31,106 @@ class Projects extends React.Component {
 
 constructor(props) {
   super(props);
+  this.state={
+    schoolDetails: {},
+    projectDetails: [],
+    modal: false, 
+    data: {},
+    project: {},
+    donate: false,
+    redirectURI: ''
+  };
+  this.handleChange= this.handleChange.bind(this);
+}
+
+componentDidMount(){
+  const { match: { params } } = this.props;
+
+  fetch(`${API_ROOT}/rest/school/${params.code}`,{
+    method: 'GET',
+   headers: {
+     "Content-Type": "application/json",
+     "Authorization": JSON.stringify(localStorage.getItem('token'))
+   }
+ })
+   .then((resp) => {
+     return resp.clone().json();
+   })
+   .then((res) => {
+     this.setState({schoolDetails: res});
+   });
+
+   fetch(`${API_ROOT}/rest/school/project/${params.code}`,{
+    method: 'GET',
+   headers: {
+     "Content-Type": "application/json",
+     "Authorization": JSON.stringify(localStorage.getItem('token'))
+   }
+ })
+   .then((resp) => {
+     return resp.clone().json();
+   })
+   .then((res) => {
+     this.setState({projectDetails: res});
+   });
+}
+
+toggle(project) {
+  this.setState(prevState => ({
+    modal: !prevState.modal
+  }));
+  this.setState({
+    project: project
+  });
+}
+donate(obj){
+    let data={
+      "token": localStorage.getItem('token'),
+      "projectId": obj.project_id,
+      "donationAmount": Number(this.state.data.amount.value)
+    }
+
+    const isFormValid = formValidation(this.state.data);
+ 
+    if (isFormValid) {
+      // do anything including ajax calls
+      this.setState({ callAPI: true });
+      fetch(`${API_ROOT}/rest/user/donate`,{
+        method: 'POST',
+       headers: {
+         "Content-Type": "application/json",
+         "Authorization": JSON.stringify(localStorage.getItem('token'))
+       },
+       body: JSON.stringify(data)
+     })
+       .then((resp) => {
+         return resp.clone().json();
+       })
+       .then((res) => {
+         this.setState({
+           donate: true,
+           redirectURI: res.paymentOptions.paymentUrl
+         })
+       });
+    } else {
+      this.setState({ callAPI: true, shouldValidateInputs: !isFormValid });
+    }
+  
+}
+
+handleChange(event, inputValue, inputName, validationState, isRequired) {
+  const value = (event && event.target.value) || inputValue;
+  const { data } = this.state;
+  data[inputName] = { value, validation: validationState, isRequired };
+  this.setState({
+    data,
+    isFormValid: false,
+    validLogin: false
+  });
+  // if you want access to your form data
+  const formData = formInputData(this.state.data); // eslint-disable-line no-unused-vars
+  // tells you if the entire form validation is true or false
+  const isFormValid = formValidation(this.state.data); // eslint-disable-line no-unused-vars
 }
 
   render() {
@@ -68,22 +167,43 @@ constructor(props) {
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <th scope="row">1</th>
-                        <td>S123456 Projector</td>
-                        <td>5000</td>
-                        <td>2500</td>
-                        <td><Button color="primary" size="sm">Donate</Button></td>
+                    {this.state.projectDetails.map((project, index) => (
+                      <tr key={project.project_id}>
+                        <th scope="row">{index}</th>
+                        <td>{project.projectName}</td>
+                        <td>{project.targetAmount}</td>
+                        <td>{project.acheivedTarget}</td>
+                        <td><Button color="primary" size="sm"  onClick={this.toggle.bind(this,project)}>Donate</Button></td>
                       </tr>
-                      <tr>
-                        <th scope="row">2</th>
-                        <td>S123457 Black Board</td>
-                        <td>1000</td>
-                        <td>200</td>
-                        <td><Button color="primary" size="sm">Donate</Button></td>
-                      </tr>
+                    ))}
                     </tbody>
                   </Table>
+
+          <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
+          <ModalHeader toggle={this.toggle}>Modal title</ModalHeader>
+          <ModalBody>
+          <Card>
+            <CardBody>
+            <h6>You are kind enough to donate. You are one step away to change the future of a child.Please enter the amount and Confirm.</h6>
+          <Field
+            validator="isNumeric" required
+            label="Amount" name="amount" placeholder="Amount"
+            onChange={this.handleChange}
+            value={this.state.data.amount}
+            shouldValidateInputs={this.state.shouldValidateInputs}
+          />
+          </CardBody>
+          </Card>
+          </ModalBody>
+          <ModalFooter>
+            <Button color="primary" onClick={this.donate.bind(this,this.state.project)}>Confirm</Button>
+            <Button color="secondary" onClick={this.toggle}>Cancel</Button>
+          </ModalFooter>
+        </Modal>
+
+        {this.state.donate && (
+                  <Redirect from={`/main/projects/${this.props.code}`} to={this.state.redirectURI}/>
+                )}
                       
                   </Col>
                   <Col sm="7" lg="7" md="7" xs="12">
@@ -91,8 +211,8 @@ constructor(props) {
                       <Col md="4" sm="4" lg="4" xs="6">
                         <p>School Name</p>
                       </Col>
-                      <Col md="4" sm="4" lg="4" xs="6">
-                        <p>Udaipur Govt. School</p>
+                      <Col md="8" sm="8" lg="8" xs="6">
+                        <p>{this.state.schoolDetails.schoolName}</p>
                       </Col>
                     </Row>
 
@@ -100,8 +220,17 @@ constructor(props) {
                       <Col md="4" sm="4" lg="4" xs="6">
                         <p>Location</p>
                       </Col>
+                      <Col md="8" sm="8" lg="8" xs="6">
+                        <p>{this.state.schoolDetails.village}</p>
+                      </Col>
+                    </Row>
+
+                    <Row>
                       <Col md="4" sm="4" lg="4" xs="6">
-                        <p>Udaipur</p>
+                        <p>Description</p>
+                      </Col>
+                      <Col md="8" sm="8" lg="8" xs="6">
+                        <p>{this.state.schoolDetails.managementDesc}</p>
                       </Col>
                     </Row>
 
@@ -109,8 +238,8 @@ constructor(props) {
                       <Col md="4" sm="4" lg="4" xs="6">
                         <p>Unique #</p>
                       </Col>
-                      <Col md="4" sm="4" lg="4" xs="6">
-                        <p>S123456</p>
+                      <Col md="8" sm="8" lg="8" xs="6">
+                        <p>{this.state.schoolDetails.school_id}</p>
                       </Col>
                     </Row>
 
@@ -118,8 +247,8 @@ constructor(props) {
                       <Col md="4" sm="4" lg="4" xs="6">
                         <p>Medium</p>
                       </Col>
-                      <Col md="4" sm="4" lg="4" xs="6">
-                        <p>English</p>
+                      <Col md="8" sm="8" lg="8" xs="6">
+                        <p>English---</p>
                       </Col>
                     </Row>
 
@@ -127,8 +256,8 @@ constructor(props) {
                       <Col md="4" sm="4" lg="4" xs="6">
                         <p>Teacher Count</p>
                       </Col>
-                      <Col md="4" sm="4" lg="4" xs="6">
-                        <p>15</p>
+                      <Col md="8" sm="8" lg="8" xs="6">
+                        <p>{this.state.schoolDetails.teacherCount}</p>
                       </Col>
                     </Row>
 
@@ -136,8 +265,8 @@ constructor(props) {
                       <Col md="4" sm="4" lg="4" xs="6">
                         <p>No. of Subjects</p>
                       </Col>
-                      <Col md="4" sm="4" lg="4" xs="6">
-                        <p>6</p>
+                      <Col md="8" sm="8" lg="8" xs="6">
+                        <p>{this.state.schoolDetails.subjectCount}</p>
                       </Col>
                     </Row>
 
@@ -145,8 +274,8 @@ constructor(props) {
                       <Col md="4" sm="4" lg="4" xs="6">
                         <p>Single Point of Contact</p>
                       </Col>
-                      <Col md="4" sm="4" lg="4" xs="6">
-                        <p>Anuj ghera</p>
+                      <Col md="8" sm="8" lg="8" xs="6">
+                        <p>{this.state.schoolDetails.spocEmail}</p>
                       </Col>
                     </Row>
 
@@ -154,8 +283,8 @@ constructor(props) {
                       <Col md="4" sm="4" lg="4" xs="6">
                         <p>Allocated Funds(in Rs.)</p>
                       </Col>
-                      <Col md="4" sm="4" lg="4" xs="6">
-                        <p>10,000/-</p>
+                      <Col md="8" sm="8" lg="8" xs="6">
+                        <p>100----</p>
                       </Col>
                     </Row>
 
@@ -163,8 +292,8 @@ constructor(props) {
                       <Col md="4" sm="4" lg="4" xs="6">
                         <p>Completed Projects</p>
                       </Col>
-                      <Col md="4" sm="4" lg="4" xs="6">
-                        <p>a,b,c,d</p>
+                      <Col md="8" sm="8" lg="8" xs="6">
+                        <p>a,b,c---</p>
                       </Col>
                     </Row>
 
@@ -172,8 +301,8 @@ constructor(props) {
                       <Col md="4" sm="4" lg="4" xs="6">
                         <p>Education Board</p>
                       </Col>
-                      <Col md="4" sm="4" lg="4" xs="6">
-                        <p>CBSE</p>
+                      <Col md="8" sm="8" lg="8" xs="6">
+                        <p>CBSE---</p>
                       </Col>
                     </Row>
 
@@ -181,8 +310,8 @@ constructor(props) {
                       <Col md="4" sm="4" lg="4" xs="6">
                         <p>Panchayat</p>
                       </Col>
-                      <Col md="4" sm="4" lg="4" xs="6">
-                        <p>Udaipur</p>
+                      <Col md="8" sm="8" lg="8" xs="6">
+                        <p>{this.state.schoolDetails.panchayatDesc}</p>
                       </Col>
                     </Row>  
 
@@ -190,11 +319,11 @@ constructor(props) {
                       <Col md="4" sm="4" lg="4" xs="6">
                         <p>Gender Ratio</p>
                       </Col>
-                      <Col md="4" sm="4" lg="4" xs="6">
+                      <Col md="8" sm="8" lg="8" xs="6">
                       <Progress multi>
                         <Progress bar value="45">Boys(45%)</Progress>
                         <Progress bar color="info" value="55">Girls(55%)</Progress>
-                      </Progress>
+                      </Progress>---
                       </Col>
                     </Row>
 

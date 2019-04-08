@@ -9,6 +9,7 @@ import {
   Container
 } from "reactstrap";
 import routes from "routes.js";
+import TokenClass from '../variables/token';
 // import "./Login.css";
 let session = require('../localSorage');
 
@@ -39,6 +40,7 @@ class SignIn extends React.Component {
       .then((res) => {
         console.log(res);
         localStorage.setItem('token', `Bearer ${res.token}`);
+        new TokenClass().setToken(res.token);
       });
   }
 

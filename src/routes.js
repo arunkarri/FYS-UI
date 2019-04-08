@@ -29,7 +29,7 @@ var routes = [
     layout: "/main"
   },
   {
-    path: "/projects",
+    path: "/projects/:code",
     name: "Ongoing Projects",
     icon: "fa fa-graduation-cap",
     component: Projects,

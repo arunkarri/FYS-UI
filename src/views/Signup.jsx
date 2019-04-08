@@ -9,7 +9,7 @@ import {
   Card, CardBody, CardTitle, CardHeader,
   Container, Tooltip, UncontrolledTooltip
 } from "reactstrap";
-import classNames from 'classnames';
+import TokenClass from '../variables/token';
 let session = require('../localSorage');
 
 class Signup extends React.Component {
@@ -53,13 +53,14 @@ class Signup extends React.Component {
     const isFormValid = formValidation(this.state.data); // eslint-disable-line no-unused-vars
   }
 
-  tokenData = {
-    "userName": this.state.data.userName.value,
-    "userType": this.state.selectedOption,
-    "fullName": this.state.data.firstName.value + ' ' + this.state.data.lastName.value,
-  };
+  
 
   isLoginValid() {
+    this.tokenData = {
+      "userName": this.state.data.userName.value,
+      "userType": this.state.selectedOption,
+      "fullName": this.state.data.firstName.value + ' ' + this.state.data.lastName.value,
+    };
 
     fetch(`${API_ROOT}/token`, {
       method: 'post',

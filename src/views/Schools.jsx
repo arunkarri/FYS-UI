@@ -12,20 +12,23 @@ import {
   Col,
   Progress
 } from "reactstrap";
-
+import { Projects } from './Projects';
+import { browserHistory, Router, Route } from 'react-router';
+import { Redirect } from 'react-router-dom';
 class Schools extends React.Component {
   constructor(props){
     super(props);
     this.state={
-      schools:[]
+      schools:[],
+      redirect: false,
+      schoolCode: 0
     }
   }
   
 
   componentDidMount(){
-    fetch(`${API_ROOT}/rest/school/GURU`,{
+    fetch(`${API_ROOT}/rest/school/all`,{
        method: 'GET',
-       crossDomain: true ,
       headers: {
         "Content-Type": "application/json",
         "Authorization": JSON.stringify(localStorage.getItem('token'))
@@ -35,8 +38,15 @@ class Schools extends React.Component {
         return resp.clone().json();
       })
       .then((res) => {
-        console.log(res);
+        this.setState({schools: res.content});
       });
+  }
+
+  schoolDetails(obj){
+    console.log(obj);
+    this.setState({redirect: true,schoolCode: obj.code});
+    // this.props.history.push(`/main/projects/${this.state.schoolCode}`);
+    console.log(this.state.schoolCode);
   }
 
 
@@ -46,11 +56,14 @@ class Schools extends React.Component {
       <div className="content">
         <h1>Onboarded Schools</h1>
         <Row>
-          <Col md="5">
+        {this.state.schools.map(school => (
+        // <li key={reptile}>{reptile}</li>
+     
+          <Col md="6" key={school.code}>
             <Card>
               <CardHeader>
-                <CardTitle tag="h4">
-                  School Name
+                <CardTitle tag="h4" key={school.schoolName}>
+                  {school.schoolName}
               </CardTitle>
               </CardHeader>
               <CardBody>
@@ -63,17 +76,17 @@ class Schools extends React.Component {
                       <Col md="4">
                         <p>Location</p>
                       </Col>
-                      <Col md="8">
-                        <p>Jaipur</p>
+                      <Col md="8" key={school.village}>
+                        <p>{school.village}</p>
                       </Col>
                     </Row>
 
                     <Row>
                       <Col md="4">
-                        <p>Unique #</p>
+                        <p>Unique ID</p>
                       </Col>
-                      <Col md="8">
-                        <p>S123456</p>
+                      <Col md="8" key={school.school_id}>
+                        <p>{school.school_id}</p>
                       </Col>
                     </Row>
 
@@ -83,6 +96,14 @@ class Schools extends React.Component {
                     <Progress value="40" color="info">Amount Collected: 2500</Progress>
                     <div className="text-center"><p>Fund Value: 5000</p></div>
                     
+                    <Row>
+                      <Col>
+                        <Button bssize="small" onClick={this.schoolDetails.bind(this,school)} type="submit">More Details</Button>
+                      {this.state.redirect && (
+                      <Redirect from="/main/schools" to={`/main/projects/${this.state.schoolCode}`} />
+                      )}
+                      </Col>
+                    </Row>
                   </Col>
 
                 </Row>
@@ -90,7 +111,7 @@ class Schools extends React.Component {
             </Card>
 
           </Col>
-
+          ))}
         </Row>
 
       </div>
