@@ -85,7 +85,7 @@ toggle(project) {
 }
 donate(obj){
     let data={
-      "token": localStorage.getItem('token'),
+      "token": localStorage.getItem('token').split(' ')[1],
       "projectId": obj.project_id,
       "donationAmount": Number(this.state.data.amount.value)
     }
