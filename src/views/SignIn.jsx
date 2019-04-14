@@ -40,7 +40,6 @@ class SignIn extends React.Component {
       .then((res) => {
         console.log(res);
         localStorage.setItem('token', `Bearer ${res.token}`);
-        new TokenClass().setToken(res.token);
       });
   }
 
@@ -67,7 +66,7 @@ class SignIn extends React.Component {
 
 
 
-  isLoginValid() {
+  isLoginValid(token) {
     console.log(typeof JSON.stringify(localStorage.getItem('token')));
     if (JSON.stringify(localStorage.getItem('token')) === 'null') {
 
@@ -76,7 +75,7 @@ class SignIn extends React.Component {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(this.defaultToken)
+        body: JSON.stringify(token)
       })
         .then(function (resp) {
           return resp.clone().json();
@@ -105,9 +104,12 @@ class SignIn extends React.Component {
       })
     })
       .then(function (resp) {
+        console.log(resp.clone().json());
         return resp.clone().json();
       })
-      .then(({ results }) => {
+      .then((results) => {
+        console.log(results);
+        localStorage.setItem('token', `Bearer ${results.userToken}`);
         this.setState({ apiPass: true })
         if (this.state.isFormValid) {
           // do anything including ajax calls
@@ -130,7 +132,7 @@ class SignIn extends React.Component {
       isFormValid: formValidation(this.state.data),
       loginData: this.loginData
     });
-    this.isLoginValid();
+    this.isLoginValid(this.defaultToken);
 
   }
 

@@ -6,7 +6,7 @@ import {
   Card,CardHeader,CardBody,CardTitle,
   Row,Col,Progress,Table, Modal, ModalHeader, ModalBody, ModalFooter
 } from "reactstrap";
-import { Redirect } from 'react-router-dom';
+
 const items = [
   {
     src: 'http://images6.fanpop.com/image/photos/36800000/School-image-school-36812016-500-434.jpg',
@@ -38,7 +38,8 @@ constructor(props) {
     data: {},
     project: {},
     donate: false,
-    redirectURI: ''
+    redirectURI: '',
+    currentURI: window.location.href
   };
   this.handleChange= this.handleChange.bind(this);
 }
@@ -107,10 +108,7 @@ donate(obj){
          return resp.clone().json();
        })
        .then((res) => {
-         this.setState({
-           donate: true,
-           redirectURI: res.paymentOptions.paymentUrl
-         })
+         window.location.replace(res.paymentOptions.paymentUrl);
        });
     } else {
       this.setState({ callAPI: true, shouldValidateInputs: !isFormValid });
@@ -201,9 +199,7 @@ handleChange(event, inputValue, inputName, validationState, isRequired) {
           </ModalFooter>
         </Modal>
 
-        {this.state.donate && (
-                  <Redirect from={`/main/projects/${this.props.code}`} to={this.state.redirectURI}/>
-                )}
+
                       
                   </Col>
                   <Col sm="7" lg="7" md="7" xs="12">

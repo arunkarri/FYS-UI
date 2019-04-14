@@ -1,6 +1,7 @@
 import Dashboard from "views/Dashboard.jsx";
 import Schools from "views/Schools.jsx";
 import Projects from "views/Projects.jsx";
+import Payment from "views/Payment.jsx";
 import Icons from "views/Icons.jsx";
 import Map from "views/Map.jsx";
 import Notifications from "views/Notifications.jsx";
@@ -34,7 +35,14 @@ var routes = [
     icon: "fa fa-graduation-cap",
     component: Projects,
     layout: "/main"
-  }
+  },
+  {
+    path: "/payment",
+    name: "Onboarded Schools",
+    icon: "tim-icons icon-bank",
+    component: Payment,
+    layout: "/main"
+  },
   // ,{
   //   path: "/icons",
   //   name: "Icons",
