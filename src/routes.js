@@ -2,16 +2,6 @@ import Dashboard from "views/Dashboard.jsx";
 import Schools from "views/Schools.jsx";
 import Projects from "views/Projects.jsx";
 import Payment from "views/Payment.jsx";
-import Icons from "views/Icons.jsx";
-import Map from "views/Map.jsx";
-import Notifications from "views/Notifications.jsx";
-import Rtl from "views/Rtl.jsx";
-import TableList from "views/TableList.jsx";
-import Typography from "views/Typography.jsx";
-import UserProfile from "views/UserProfile.jsx";
-import Login from "layouts/Login/Login.jsx";
-import Signup from "views/Signup.jsx";
-import SignIn from "views/SignIn.jsx";
 
 var routes = [
   {

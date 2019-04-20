@@ -1,8 +1,6 @@
 import React from "react";
 import { API_ROOT } from '../variables/api';
 import {
-  Alert,
-  UncontrolledAlert,
   Button,
   Card,
   CardHeader,
@@ -12,8 +10,6 @@ import {
   Col,
   Progress
 } from "reactstrap";
-import { Projects } from './Projects';
-import { browserHistory, Router, Route } from 'react-router';
 import { Redirect } from 'react-router-dom';
 class Schools extends React.Component {
   constructor(props){

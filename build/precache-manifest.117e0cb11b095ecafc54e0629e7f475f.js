@@ -4,16 +4,12 @@ self.__precacheManifest = [
     "url": "/static/media/react-logo.eb6be414.png"
   },
   {
-    "revision": "355ed3ffbbf55a6f4d64",
-    "url": "/static/css/main.370063e7.chunk.css"
+    "revision": "69e4bf3632816f4fcdcd",
+    "url": "/static/css/main.cc9c15ca.chunk.css"
   },
   {
-    "revision": "b17a118e13e53558658b681a0ebdad82",
-    "url": "/static/media/nucleo.b17a118e.ttf"
-  },
-  {
-    "revision": "3ae74f93bf4a17bd7894",
-    "url": "/static/js/1.3ae74f93.chunk.js"
+    "revision": "98b906a24a18ea0b2511",
+    "url": "/static/js/1.98b906a2.chunk.js"
   },
   {
     "revision": "229c360febb4351a89df",
@@ -28,31 +24,27 @@ self.__precacheManifest = [
     "url": "/static/media/FUND.90e2d129.png"
   },
   {
-    "revision": "355ed3ffbbf55a6f4d64",
-    "url": "/static/js/main.355ed3ff.chunk.js"
-  },
-  {
-    "revision": "9fcf69e5359987c9b1545aae1c2c5faa",
-    "url": "/static/media/emilyz.9fcf69e5.jpg"
-  },
-  {
-    "revision": "5987dd12fea78ce5f97ae601b08ec03c",
-    "url": "/static/media/nucleo.5987dd12.woff2"
+    "revision": "69e4bf3632816f4fcdcd",
+    "url": "/static/js/main.69e4bf36.chunk.js"
   },
   {
     "revision": "03ef1918e505c3e3471f9369ef7a638f",
     "url": "/static/media/nucleo.03ef1918.eot"
   },
   {
+    "revision": "5987dd12fea78ce5f97ae601b08ec03c",
+    "url": "/static/media/nucleo.5987dd12.woff2"
+  },
+  {
     "revision": "f0b489a5dbbff08833d21024f9fcbd4e",
     "url": "/static/media/nucleo.f0b489a5.woff"
   },
   {
-    "revision": "3ae74f93bf4a17bd7894",
-    "url": "/static/css/1.1751d39c.chunk.css"
+    "revision": "b17a118e13e53558658b681a0ebdad82",
+    "url": "/static/media/nucleo.b17a118e.ttf"
   },
   {
-    "revision": "4c8cf7d601886b1ee8b8d33f2c320ade",
+    "revision": "296def82795c7de51ec9ba0fd3e9060e",
     "url": "/index.html"
   }
 ];

@@ -1,14 +1,7 @@
-import React, {Component} from "react";
-import { Field, formInputData, formValidation } from 'reactjs-input-validator';
-import {Link,Route,Redirect,Switch} from 'react-router-dom';
-import { API_ROOT } from '../../variables/api';
+import React from "react";
+import {Route,Switch} from 'react-router-dom';
 
-import {
-  Button, Form, FormGroup, Label, Input,
-  Col,
-  Card,CardBody,CardTitle,CardHeader,
-  Container
-} from "reactstrap";
+
 import routes from "pvtRoutes.js";
 // import "./Login.css";
 

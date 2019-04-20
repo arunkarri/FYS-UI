@@ -1,17 +1,14 @@
 import React from "react";
 import { Field, formInputData, formValidation } from 'reactjs-input-validator';
-import { Link, Route, Redirect, Switch } from 'react-router-dom';
+import { Link, Redirect, Switch } from 'react-router-dom';
 import { API_ROOT } from '../variables/api';
 import {
-  Button, Form, FormGroup, Label, Input,
+  Button,
   Col,
   Card, CardBody, CardTitle, CardHeader,
   Container
 } from "reactstrap";
-import routes from "routes.js";
-import TokenClass from '../variables/token';
 // import "./Login.css";
-let session = require('../localSorage');
 
 class SignIn extends React.Component {
   constructor(props) {

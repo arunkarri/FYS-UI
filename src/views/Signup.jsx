@@ -1,16 +1,15 @@
 import React from "react";
 import { Field, formInputData, formValidation } from 'reactjs-input-validator';
-import { Link, Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import { API_ROOT } from '../variables/api';
 
 import {
-  Button, Form, FormGroup, Label, Input,
+  Button, FormGroup, Label, Input,
   Col,
   Card, CardBody, CardTitle, CardHeader,
-  Container, Tooltip, UncontrolledTooltip
+  Container, UncontrolledTooltip
 } from "reactstrap";
-import TokenClass from '../variables/token';
-let session = require('../localSorage');
+
 
 class Signup extends React.Component {
   constructor(props) {

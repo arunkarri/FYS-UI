@@ -108,6 +108,7 @@ donate(obj){
          return resp.clone().json();
        })
        .then((res) => {
+         debugger;
          window.location.replace(res.paymentOptions.paymentUrl);
        });
     } else {
