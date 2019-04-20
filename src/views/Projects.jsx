@@ -108,7 +108,6 @@ donate(obj){
          return resp.clone().json();
        })
        .then((res) => {
-         debugger;
          window.location.replace(res.paymentOptions.paymentUrl);
        });
     } else {
@@ -168,7 +167,7 @@ handleChange(event, inputValue, inputName, validationState, isRequired) {
                     <tbody>
                     {this.state.projectDetails.map((project, index) => (
                       <tr key={project.project_id}>
-                        <th scope="row">{index}</th>
+                        <th scope="row">{index+1}</th>
                         <td>{project.projectName}</td>
                         <td>{project.targetAmount}</td>
                         <td>{project.acheivedTarget}</td>
