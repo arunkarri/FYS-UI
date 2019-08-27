@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
-import LoginScreen from './Loginscreen';
+import LoginScreen from './auth/Loginscreen';
+
 class App extends Component {
   constructor(props){
     super(props);
