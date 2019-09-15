@@ -27,37 +27,3 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-
-
-
-export default{
-  Card,
-  CardHeader,
-  CardActionArea,
-  CardActions,
-  CardContent,
-  CardMedia,
-  Typography,
-  Button,
-  LinearProgress,
-  IconButton,
-  SearchIcon,
-  Input,
-  InputAdornment,
-  Grid,
-  Avatar,
-  MoreVertIcon,
-  Icon,
-  FontAwesomeIcon,
-  faMapMarkerAlt,
-  ExpansionPanel,
-  ExpansionPanelSummary,
-  ExpansionPanelDetails,
-  ExpandMoreIcon,
-  Paper,
-  InputLabel,
-  MenuItem,
-  FormHelperText,
-  FormControl,
-  Select
-}

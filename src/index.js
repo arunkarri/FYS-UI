@@ -2,7 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import SearchSchools from './pages/SearchSchools';
-import FullDetails from './pages/FullDetails';
+import SchoolDetails from './pages/SchoolDetails';
+import Donate from './pages/Donate';
 import * as serviceWorker from './serviceWorker';
 import { createBrowserHistory } from "history";
 import { Router, Route, Switch, Redirect } from "react-router-dom";
@@ -17,7 +18,8 @@ const routing = (
         <Redirect from="*" to="/schools" />
       </Switch>
       <Route path="/schools" component={SearchSchools} />
-      <Route path="/details/:code" component={FullDetails} />
+      <Route path="/details/:code" component={SchoolDetails} />
+      <Route path="/donate/:code" component={Donate} />
 
     </div>
   </Router>

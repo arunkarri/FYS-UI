@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Card from '@material-ui/core/Card';
-import material from '../variables/material';
+import m from '../variables/material';
 import { API_ROOT } from '../variables/api';
 import styles from '../utils/styles';
 import { Router, Route, Switch, Redirect } from "react-router-dom";
@@ -78,66 +78,77 @@ class Schools extends Component {
         return (
             <div style={styles.root}>
                 <div style={styles.searchContainer}>
-                    <material.Input
+                    <m.Input
                         style={styles.searchInput}
                         id="adornment-search"
                         placeholder="SEARCH"
                         onChange={e => this.handleChange(e)}
                         endAdornment={
-                            <material.InputAdornment position="end">
-                                <material.IconButton aria-label="search">
-                                    <material.SearchIcon />
-                                </material.IconButton>
-                            </material.InputAdornment>}
+                            <m.InputAdornment position="end">
+                                <m.IconButton aria-label="search">
+                                    <m.SearchIcon />
+                                </m.IconButton>
+                            </m.InputAdornment>}
                     />
                 </div>
                 <div style={styles.schoolsContainer}>
-                    <material.Grid container spacing={2}>
+                    <m.Grid container spacing={2}>
                         {this.state.filteredSchools.map(school => (
-                            <material.Grid item xs={4}>
+                            <m.Grid item xs={4}>
                                 <Card key={school.code} style={styles.card}>
-                                    <material.CardActionArea>
-                                        <material.CardMedia
+                                    <m.CardHeader
+                                        avatar={
+                                            <m.Avatar aria-label="recipe" className="avatar">
+                                                 {school.schoolName.split('')[0].toUpperCase()}
+                                            </m.Avatar>
+                                        }
+                                        action={
+                                            <m.IconButton aria-label="settings">
+                                                <m.MoreVertIcon />
+                                            </m.IconButton>
+                                        }
+                                        title= {school.schoolName.toUpperCase()}
+                                        subheader={<span><m.FontAwesomeIcon 
+                                        icon={m.faMapMarkerAlt} />&nbsp;{school.village}</span>}
+                                    ></m.CardHeader>
+                                    <m.CardActionArea>
+                                        <m.CardMedia
                                             component="img"
                                             alt="school"
-                                            height="50"
+                                            height="120"
                                             image="https://upload.wikimedia.org/wikipedia/commons/8/82/2009-0617-Ontonagon-school.jpg"
                                             title={school.schoolName}
                                         />
-                                        <material.CardContent>
-                                            <material.Typography gutterBottom variant="h5" component="h2">
-                                                {school.schoolName}
-                                            </material.Typography>
-                                            <material.Typography variant="body2" color="textSecondary" component="p">
+                                        <m.CardContent>
+                                            <m.Typography variant="body2" color="textSecondary" component="p">
                                                 <span style={styles.subHeader}>
-                                                    <span> Location: {school.village} </span>
-                                                    <span> Unique Id: {school.school_id} </span>
+                                                    <b> Unique ID: {school.school_id} </b>
                                                 </span>
                                                 <span style={styles.progressText}>
-                                                    <span> Amount Collected: 2500 </span>
-                                                    <span> Fund Value: 5000 </span>
+                                                    <b> Amount Collected: 2500 </b>
+                                                    <b> Fund Value: 5000 </b>
                                                 </span>
-                                            </material.Typography>
-                                            <material.LinearProgress
+                                            </m.Typography>
+                                            <m.LinearProgress
                                                 variant="determinate"
-                                                color="secondary"
+                                                // color="secondary"
                                                 value={50}
                                             />
-                                        </material.CardContent>
-                                    </material.CardActionArea>
-                                    <material.CardActions>
-                                        <material.Button size="small" color="primary"
+                                        </m.CardContent>
+                                    </m.CardActionArea>
+                                    <m.CardActions>
+                                        <m.Button size="small" color="primary"
                                             onClick={this.schoolDetails.bind(this, school)}>
-                                            Learn More
-                            </material.Button>
+                                            <b className="learnMore">Learn More</b>
+                                        </m.Button>
                                         {this.state.redirect && (
                                             <Redirect from="/schools" to={`/details/${this.state.schoolCode}`} />
                                         )}
-                                    </material.CardActions>
+                                    </m.CardActions>
                                 </Card>
-                            </material.Grid>
+                            </m.Grid>
                         ))}
-                    </material.Grid>
+                    </m.Grid>
                 </div>
             </div>
         )
