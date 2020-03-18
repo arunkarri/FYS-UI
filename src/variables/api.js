@@ -1,5 +1,5 @@
 
 
-let hostname='http://192.34.59.184:8443/fys';
+let hostname='http://18.189.33.77:8443';
 
 export const API_ROOT= `${hostname}`;
