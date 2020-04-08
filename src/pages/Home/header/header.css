@@ -1,0 +1,52 @@
+.logo {
+  width: 100px !important;
+  padding: 25px;
+  display: inline-block;
+  float: left;
+}
+
+.wrapper{
+    padding: 22px;
+  }
+
+
+  @font-face {
+    font-family: 'PeaceSans';
+    src: local('PeaceSans'), url(../fonts/peace_sans.otf) format('opentype');
+  }
+
+  .appButton {
+    color: #fff !important;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 20px;
+    border: 4px solid #fff !important;
+    display: block;
+    line-height: 50px;
+    font-size: 25px;
+    font-family: Poppins;
+    font-weight: 1000;
+    transition: all 0.4s ease 0s;
+    }
+
+    .appButton:hover {
+      color: #ffffff !important;
+      background: #0acf83;
+      border-color: #0acf83 !important;
+      transition: all 0.4s ease 0s;
+      }
+
+  
+  .title {
+    font-family: 'PeaceSans' !important;
+    text-transform: uppercase;
+    text-shadow: 2px 2px 4px #000000;
+    -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer */
+     -khtml-user-select: none; /* KHTML browsers (e.g. Konqueror) */
+    -webkit-user-select: none; /* Chrome, Safari, and Opera */
+    -webkit-touch-callout: none; /* Disable Android and iOS callouts*/
+    display: inline-block;
+    padding: 50px 0px 50px 0px;
+    float: left;
+  }
