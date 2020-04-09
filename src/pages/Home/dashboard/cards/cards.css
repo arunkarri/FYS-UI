@@ -1,0 +1,24 @@
+.card:hover {
+    box-shadow: 0 0 4px 4px rgb(255, 255, 255);
+    background-color: #0acf83;
+    color: #fff;
+}
+  
+.card{
+  padding: 20px;
+}
+
+.label {
+  color: #fff;
+  font-weight: 500;
+}
+
+.paper {
+  height: 500;
+  width: 500;
+}
+
+.root {
+flexGrow: 1;
+}
+

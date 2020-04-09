@@ -7,6 +7,7 @@ import Donate from './pages/Donate';
 import * as serviceWorker from './serviceWorker';
 import { createBrowserHistory } from "history";
 import { Router, Route, Switch, Redirect } from "react-router-dom";
+import Home from './pages/Home/Home'
 
 const hist = createBrowserHistory();
 
@@ -15,8 +16,9 @@ const routing = (
   <Router history={hist}>
     <div>
       <Switch>
-        <Redirect from="*" to="/schools" />
+        <Redirect from="*" to="/home" />
       </Switch>
+      <Route path="/home" component={Home} />
       <Route path="/schools" component={SearchSchools} />
       <Route path="/details/:code" component={SchoolDetails} />
       <Route path="/donate/:code" component={Donate} />
