@@ -54,7 +54,7 @@ export default class Charts extends Component {
 
               <Paper className="paper" xs={12} sm={6} >
                
-                <AppCount />
+                <RadialBar />
               </Paper>
             </Grid>
             

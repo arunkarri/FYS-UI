@@ -5,7 +5,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Logo from "../img/logo.png";
 import Grid from '@material-ui/core/Grid';
-import { Router, Route, Switch, Redirect } from "react-router-dom";
+import { Router, Route, Switch, Redirect, useHistory } from "react-router-dom";
 import "./header.css"
 
 
@@ -29,6 +29,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function ButtonAppBar() {
   const classes = useStyles();
+  const history = useHistory();
 
   let redirect= false;
   
@@ -37,6 +38,10 @@ export default function ButtonAppBar() {
    
     redirect= true;
 
+  }
+  
+  function handleClick() {
+    history.push("/schools");
   }
 
   return (
@@ -74,7 +79,7 @@ export default function ButtonAppBar() {
 <Grid item xs={3} sm={3}>
 
 <div className="wrapper">
-  <a className="appButton" onClick="">Take me to the App</a>
+  <a className="appButton"  onClick={handleClick}>Take me to the App</a>
  
   </div>
             
